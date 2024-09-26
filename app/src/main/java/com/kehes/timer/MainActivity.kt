@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         TODO()
     }
 
-    private fun isValid() =!binding.secondsInputView.text.isNullOrBlank()
+    private fun isValid() = !binding.secondsInputView.text.isNullOrBlank()
 }
 
 enum class ArgumentKey() {
