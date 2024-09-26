@@ -3,4 +3,7 @@
     <string name="input_seconds_count">Input seconds count</string>
     <string name="set_timer">Set timer</string>
     <string name="send_number">Send number</string>
+    <string name="start">Start</string>
+    <string name="pause">Pause</string>
+    <string name="reset">Reset</string>
 </resources>
