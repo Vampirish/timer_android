@@ -1,5 +1,6 @@
 package com.kehes.timer
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -17,13 +18,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setUpSetTimerButton()
-        setUpSendNumberButton()
+//        setUpSendNumberButton()
     }
 
     private fun setUpSetTimerButton() {
         binding.setTimerBtn.setOnClickListener {
             if (isValid()) {
-                TODO()
+                val intent = Intent(this, TimerActivity::class.java)
+                intent.putExtra(ArgumentKey.NAME.name, binding.secondsInputView.text.toString())
+                startActivity(intent)
             } else {
                 Toast.makeText(this, "You need input seconds", Toast.LENGTH_SHORT).show()
             }
@@ -35,4 +38,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isValid() =!binding.secondsInputView.text.isNullOrBlank()
+}
+
+enum class ArgumentKey() {
+    NAME
 }
