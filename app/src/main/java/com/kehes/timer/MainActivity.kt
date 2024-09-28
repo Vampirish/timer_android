@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         binding.setTimerBtn.setOnClickListener {
             if (isValid()) {
                 val intent = Intent(this, TimerActivity::class.java)
-                intent.putExtra(ArgumentKey.NAME.name, binding.secondsInputView.text.toString())
+                intent.putExtra(ArgumentKey.SECONDS.name, binding.secondsInputView.text.toString())
                 startActivity(intent)
             } else {
                 Toast.makeText(this, "You need input seconds", Toast.LENGTH_SHORT).show()
@@ -41,5 +41,5 @@ class MainActivity : AppCompatActivity() {
 }
 
 enum class ArgumentKey() {
-    NAME
+    SECONDS
 }
