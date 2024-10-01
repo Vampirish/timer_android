@@ -2,18 +2,13 @@ package com.kehes.timer
 
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.Handler
-import android.os.Looper
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.kehes.timer.databinding.ActivityTimerBinding
+import java.util.Locale
 
 class TimerActivity : AppCompatActivity() {
-    private lateinit var textView: TextView
     private lateinit var binding: ActivityTimerBinding
-    private lateinit var countDownTimer: CountDownTimer
-    private var timeToEnd: Int = 0
+    private var timeToEnd: Long = 0
     private var countDownInterval: Long = 1000
     private var running: Boolean = false
 
@@ -24,22 +19,21 @@ class TimerActivity : AppCompatActivity() {
 
         intent.extras?.let {
             val timeToEndStr = it.getString(ArgumentKey.SECONDS.name).toString()
-            timeToEnd = timeToEndStr.toInt()
+            timeToEnd = timeToEndStr.toLong() * 1000
         }
-        textView = findViewById(R.id.time_view)
 
-/*
         object : CountDownTimer(timeToEnd, countDownInterval) {
-            override fun onTick(p0: Long) {
-                mTextField.setText("seconds remaining: " + millisUntilFinished / 1000)
+            override fun onTick(millisUntilFinished: Long) {
+                val min = (millisUntilFinished / 60000) % 60
+                val sec = (millisUntilFinished / 1000) % 60
+                val time = String.format(Locale.getDefault(),"%02d:%02d", min, sec)
+                binding.timeView.text = time
             }
 
             override fun onFinish() {
-                mTextField.setText("done!")
+                binding.timeView.text = "00:00"
             }
-
         }.start()
-*/
 
 
         with(binding) {
@@ -54,16 +48,6 @@ class TimerActivity : AppCompatActivity() {
             }
         }
 
-        // runTimer()
-    }
-
-    private fun runTimer() {
-        val handler = Handler(Looper.getMainLooper())
-        handler.post(object : Runnable {
-            override fun run() {
-                TODO("Not yet implemented")
-            }
-        })
     }
 
     private fun startClick() {
