@@ -4,13 +4,16 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.kehes.timer.databinding.ActivityTimerBinding
 
 class TimerActivity : AppCompatActivity() {
+    private lateinit var textView: TextView
     private lateinit var binding: ActivityTimerBinding
     private lateinit var countDownTimer: CountDownTimer
-    private var milliseconds: Long = 0
+    private var timeToEnd: Int = 0
     private var countDownInterval: Long = 1000
     private var running: Boolean = false
 
@@ -20,9 +23,13 @@ class TimerActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         intent.extras?.let {
-            milliseconds = it.getLong(ArgumentKey.SECONDS.name) * 100
+            val timeToEndStr = it.getString(ArgumentKey.SECONDS.name).toString()
+            timeToEnd = timeToEndStr.toInt()
         }
-        object : CountDownTimer(milliseconds, countDownInterval) {
+        textView = findViewById(R.id.time_view)
+
+/*
+        object : CountDownTimer(timeToEnd, countDownInterval) {
             override fun onTick(p0: Long) {
                 mTextField.setText("seconds remaining: " + millisUntilFinished / 1000)
             }
@@ -32,6 +39,7 @@ class TimerActivity : AppCompatActivity() {
             }
 
         }.start()
+*/
 
 
         with(binding) {
@@ -46,7 +54,7 @@ class TimerActivity : AppCompatActivity() {
             }
         }
 
-        runTimer()
+        // runTimer()
     }
 
     private fun runTimer() {
@@ -68,7 +76,6 @@ class TimerActivity : AppCompatActivity() {
 
     private fun resetClick() {
         running = false
-        seconds = 0
     }
 
 }
