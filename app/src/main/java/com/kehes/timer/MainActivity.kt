@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setUpSetTimerButton()
-//        setUpSendNumberButton()
+        setUpSendNumberButton()
     }
 
     private fun setUpSetTimerButton() {
@@ -34,7 +34,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpSendNumberButton() {
-        TODO()
+        binding.sendNumberBtn.setOnClickListener {
+            if (isValid()) {
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.putExtra(Intent.EXTRA_TEXT, binding.secondsInputView.text.toString())
+                intent.type = "text/plain"
+                val choseIntent = Intent.createChooser(intent, "Sharing number")
+                startActivity(choseIntent)
+            } else {
+                Toast.makeText(this, "You need input seconds", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun isValid() = !binding.secondsInputView.text.isNullOrBlank()
