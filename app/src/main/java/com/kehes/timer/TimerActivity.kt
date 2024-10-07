@@ -1,5 +1,6 @@
 package com.kehes.timer
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -95,5 +96,9 @@ class TimerActivity : AppCompatActivity() {
 
     private fun autoResetClick() {
         autoReset = !autoReset
+        if (autoReset)
+            binding.autoResetBtn.setBackgroundColor(Color.GREEN)
+        else
+            binding.autoResetBtn.setBackgroundColor(Color.RED)
     }
 }
