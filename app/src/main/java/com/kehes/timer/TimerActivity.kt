@@ -2,6 +2,7 @@ package com.kehes.timer
 
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.kehes.timer.databinding.ActivityTimerBinding
 import java.util.Locale
@@ -21,20 +22,7 @@ class TimerActivity : AppCompatActivity() {
             val timeToEndStr = it.getString(ArgumentKey.SECONDS.name).toString()
             timeToEnd = timeToEndStr.toLong() * 1000
         }
-
-        object : CountDownTimer(timeToEnd, countDownInterval) {
-            override fun onTick(millisUntilFinished: Long) {
-                val min = (millisUntilFinished / 60000) % 60
-                val sec = (millisUntilFinished / 1000) % 60
-                val time = String.format(Locale.getDefault(),"%02d:%02d", min, sec)
-                binding.timeView.text = time
-            }
-
-            override fun onFinish() {
-                binding.timeView.text = "00:00"
-            }
-        }.start()
-
+        timeView(timeToEnd)
 
         with(binding) {
             startBtn.setOnClickListener {
@@ -47,10 +35,33 @@ class TimerActivity : AppCompatActivity() {
                 resetClick()
             }
         }
+    }
 
+    private fun runTimer() {
+        object : CountDownTimer(timeToEnd, countDownInterval) {
+            override fun onTick(millisUntilFinished: Long) {
+                if (running)
+                    timeView(millisUntilFinished)
+                else
+                    timeView(millisUntilFinished)
+                    onFinish()
+//                Log.e("Time", ">>> time: ${millisUntilFinished/1000}")
+            }
+
+            override fun onFinish() {
+            }
+        }.start()
+    }
+
+    private fun timeView(millis: Long) {
+        val min = (millis / 60000) % 60
+        val sec = (millis / 1000) % 60
+        val time = String.format(Locale.getDefault(),"%02d:%02d", min, sec)
+        binding.timeView.text = time
     }
 
     private fun startClick() {
+        runTimer()
         running = true
     }
 
