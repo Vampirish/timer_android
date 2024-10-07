@@ -13,6 +13,7 @@ class TimerActivity : AppCompatActivity() {
     private val countDownInterval: Long = 1000
     private var running: Boolean = false
     private var onPause: Boolean = true
+    private var autoReset: Boolean = false
     private var timeToEnd : Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +38,9 @@ class TimerActivity : AppCompatActivity() {
             resetBtn.setOnClickListener {
                 resetClick()
             }
+            autoResetBtn.setOnClickListener {
+                autoResetClick()
+            }
         }
     }
 
@@ -55,6 +59,11 @@ class TimerActivity : AppCompatActivity() {
 
             override fun onFinish() {
                 binding.timeView.text = "00:00"
+                timeToEnd = 0
+                if (autoReset) {
+                    timeToEnd = originTimeToEnd + 1000
+                    runTimer()
+                }
             }
         }.start()
     }
@@ -82,5 +91,9 @@ class TimerActivity : AppCompatActivity() {
         onPause = false
         timeToEnd = originTimeToEnd
         timeView(originTimeToEnd)
+    }
+
+    private fun autoResetClick() {
+        autoReset = !autoReset
     }
 }

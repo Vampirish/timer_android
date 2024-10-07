@@ -42,4 +42,13 @@
         android:text="@string/reset"
         android:textAllCaps="true"
         android:textStyle="bold" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/auto_reset_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:text="@string/auto_reset"
+        android:textAllCaps="true"
+        android:textStyle="bold" />
 </LinearLayout>
