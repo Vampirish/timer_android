@@ -9,9 +9,11 @@ import java.util.Locale
 
 class TimerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTimerBinding
-    private var timeToEnd: Long = 0
-    private var countDownInterval: Long = 1000
+    private var originTimeToEnd: Long = 0
+    private val countDownInterval: Long = 1000
     private var running: Boolean = false
+    private var onPause: Boolean = true
+    private var timeToEnd : Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,9 +22,10 @@ class TimerActivity : AppCompatActivity() {
 
         intent.extras?.let {
             val timeToEndStr = it.getString(ArgumentKey.SECONDS.name).toString()
-            timeToEnd = timeToEndStr.toLong() * 1000
+            originTimeToEnd = timeToEndStr.toLong() * 1000
+            timeToEnd = originTimeToEnd
         }
-        timeView(timeToEnd)
+        timeView(originTimeToEnd)
 
         with(binding) {
             startBtn.setOnClickListener {
@@ -42,13 +45,16 @@ class TimerActivity : AppCompatActivity() {
             override fun onTick(millisUntilFinished: Long) {
                 if (running)
                     timeView(millisUntilFinished)
-                else
-                    timeView(millisUntilFinished)
-                    onFinish()
-//                Log.e("Time", ">>> time: ${millisUntilFinished/1000}")
+                else {
+                    if (onPause)
+                        timeToEnd = millisUntilFinished
+                    cancel()
+                }
+//              Log.e("Time", ">>> time: ${millisUntilFinished/1000}")
             }
 
             override fun onFinish() {
+                binding.timeView.text = "00:00"
             }
         }.start()
     }
@@ -63,14 +69,18 @@ class TimerActivity : AppCompatActivity() {
     private fun startClick() {
         runTimer()
         running = true
+        onPause = false
     }
 
     private fun pauseClick() {
         running = false
+        onPause = true
     }
 
     private fun resetClick() {
         running = false
+        onPause = false
+        timeToEnd = originTimeToEnd
+        timeView(originTimeToEnd)
     }
-
 }
