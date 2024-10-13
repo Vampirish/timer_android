@@ -1,6 +1,7 @@
 package com.kehes.timer
 
 import android.graphics.Color
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -59,6 +60,7 @@ class TimerActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
+                ringTimer()
                 binding.timeView.text = "00:00"
                 timeToEnd = 0
                 if (autoReset) {
@@ -77,9 +79,11 @@ class TimerActivity : AppCompatActivity() {
     }
 
     private fun startClick() {
-        runTimer()
-        running = true
-        onPause = false
+        if (timeToEnd.toInt() != 0) {
+            runTimer()
+            running = true
+            onPause = false
+        }
     }
 
     private fun pauseClick() {
@@ -100,5 +104,10 @@ class TimerActivity : AppCompatActivity() {
             binding.autoResetBtn.setBackgroundColor(Color.GREEN)
         else
             binding.autoResetBtn.setBackgroundColor(Color.RED)
+    }
+
+    private fun ringTimer() {
+        val sound = MediaPlayer.create(this, R.raw.bong)
+        sound.start()
     }
 }
