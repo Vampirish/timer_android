@@ -17,6 +17,7 @@ class TimerActivity : AppCompatActivity() {
     private var onPause: Boolean = true
     private var autoReset: Boolean = false
     private var timeToEnd : Long = 0
+    private var timer: CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,16 +45,28 @@ class TimerActivity : AppCompatActivity() {
                 autoResetClick()
             }
         }
+        savedInstanceState?.let {
+            timeToEnd = it.getLong(State.TIMETOEND.name)
+            running = it.getBoolean(State.RUNNING.name)
+            onPause = it.getBoolean(State.ONPAUSE.name)
+            autoReset = it.getBoolean(State.AUTORESET.name)
+
+            if (running && !onPause)
+                runTimer()
+            else
+                timeView(timeToEnd)
+        }
     }
 
     private fun runTimer() {
-        object : CountDownTimer(timeToEnd, countDownInterval) {
+        timer?.cancel()
+        timer = object : CountDownTimer(timeToEnd, countDownInterval) {
             override fun onTick(millisUntilFinished: Long) {
-                if (running)
+                if (running) {
                     timeView(millisUntilFinished)
+                    timeToEnd = millisUntilFinished
+                }
                 else {
-                    if (onPause)
-                        timeToEnd = millisUntilFinished
                     cancel()
                 }
 //              Log.e("Time", ">>> time: ${millisUntilFinished/1000}")
@@ -79,22 +92,24 @@ class TimerActivity : AppCompatActivity() {
     }
 
     private fun startClick() {
-        if (timeToEnd.toInt() != 0) {
-            runTimer()
+        if (timeToEnd > 0) {
             running = true
             onPause = false
+            runTimer()
         }
     }
 
     private fun pauseClick() {
         running = false
         onPause = true
+        timer?.cancel()
     }
 
     private fun resetClick() {
         running = false
         onPause = false
         timeToEnd = originTimeToEnd
+        timer?.cancel()
         timeView(originTimeToEnd)
     }
 
@@ -110,4 +125,21 @@ class TimerActivity : AppCompatActivity() {
         val sound = MediaPlayer.create(this, R.raw.bong)
         sound.start()
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putLong(State.TIMETOEND.name, timeToEnd)
+        outState.putBoolean(State.RUNNING.name, running)
+        outState.putBoolean(State.ONPAUSE.name, onPause)
+        outState.putBoolean(State.AUTORESET.name, autoReset)
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        timer?.cancel()
+    }
+}
+
+enum class State{
+    RUNNING, TIMETOEND, ONPAUSE, AUTORESET
 }
