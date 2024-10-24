@@ -1,5 +1,6 @@
 package com.kehes.timer
 
+import android.content.Intent
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -25,7 +26,9 @@ class TimerActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         intent.extras?.let {
-            val timeToEndStr = it.getString(ArgumentKey.SECONDS.name).toString()
+            val labelTimeToEndStr = it.getString(ArgumentKey.SECONDS.name).toString()
+            val intentTimeToEndStr = it.getString(Intent.EXTRA_TEXT)
+            val timeToEndStr = intentTimeToEndStr ?: labelTimeToEndStr
             originTimeToEnd = timeToEndStr.toLong() * 1000
             timeToEnd = originTimeToEnd
         }
